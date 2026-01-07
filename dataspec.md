@@ -4,19 +4,20 @@
 ## Pinout
 
 * 5VCC (I): 5V Logic Supply Input
-* GND: Reference Ground for 5VCC
+* GND: Reference Ground for 5VCC. All ground pins are common.
 * A0-23 (O): Low Order 20 bits of Address Bus
-* A24-26/W0-2 (O): For Primary Bus Transfers, next 3 bits of Address Bus. For I/O transfers, lower 3 bits of the transfer width. For Coprocessor Transfers, reserved.
-* A27-29/W3-4/N0-1 (O): For Primary Bus Transfers, top 2 bits of Address Bus. For I/O transfers, top 2 bits of transfer width. For Coprocessor Transfers, target coprocessor number.
+* A24-26/W0-2/N0-2 (O): For Primary Bus Transfers, next 3 bits of Address Bus. For I/O transfers, lower 3 bits of the transfer width. For Coprocessor Transfers, target coprocessor number.
+* A27-29/W3-4 (O): For Primary Bus Transfers, top 2 bits of Address Bus. For I/O transfers, top 2 bits of transfer width. For coprocessor transfers, zero.
 * BE (IO): Bus Enabled
 * BA (I): Bus Acknowledge
 * W (O): Bus Transfer Write Control
 * IO (O): Primary/Secondary Bus Control
 * SC (O): Bus Designation
 * D0-31 (IO): Data Bus
+* WBE0-3 (O): When writing to main memory (W=0, IO=0), any bits set to 0 corresponds to bytes that are not modified by the write cycle.
 * RESET (I): Reset Line
-* EX0-2 (I): External Exception Trigger
-* IRQ0-5 (I): Interrupt Request Trigger
+* EX0-3 (I): External Exception Trigger
+* IRQ0-4 (I): Interrupt Request Trigger
 * S0-1 (O): CPU Status
 * CLK (I): Internal Clock
 * COE0-3 (O): Coprocessor Enabled
@@ -105,21 +106,14 @@ Co-processor Instruction Execution is performed in the same manner as a write op
 
 External Exception Trigger:
 
-| EX | Vector | Notes |
-|----|--------|-------|
-| 0  | -      | No Exception |
-| 1  | EX[1]  | For external MMU to raise Bus Error |
-| 2  | EX[15] | Non-maskable Interrupt Request |
-| 3  | -      | Reserved |
-| 4-7| EX[4-7]| Co-processor 0-3 Error |
+When EX is non-zero, the exception indicated by EX is triggered if it is one of the following:
+* EX[2] (Bus Error)
+* EX[7] (NMI)
+* EX[8-15] (Coprocessor )
 
 Interrupt Request:
 
-* 0: No IRQ 
-* 1-15: Reserved
-* 16-63: Trigger Vector number 16-63
-
-An Exception or IRQ request occurs by placing a non-zero value on the bus before the rising edge of a clock pulse.
+If Non-Zero, triggers interrupt indicated by IRQ, equal to IRQ+32. Note that IRQ 0 is impossible in this mode.
 
 ## Status
 
