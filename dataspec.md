@@ -5,7 +5,7 @@
 
 Legend:
 
-* Pull Down: Pin Connected Internally via 100kOhm resistor to GND provided both 5VCC and GND are connected
+* Pull Down: Pin Connected Internally via 10kOhm resistor to GND provided both 5VCC and GND are connected
 * Pull Up: Pin Connected Internally via 10kOhm Reistor to 5VCC provided both 5VCC and GND are connected
 * Float: Pin floats when not connected
 * Active: Pin is Strong Unknown (output)/Don't Care (input) when not in use
